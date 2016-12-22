@@ -615,6 +615,22 @@
             </dependencies>
         </profile>
         <profile>
+            <id>kafka-0.9-dev</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.10</artifactId>
+                    <version>0.9.0.1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-simple</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>kafka-0.10-dev</id>
             <dependencies>
                 <dependency>
