@@ -16,14 +16,10 @@
  */
 package com.pinterest.secor.uploader;
 
-import com.google.common.base.Joiner;
-import com.pinterest.secor.common.*;
-import com.pinterest.secor.io.FileReader;
-import com.pinterest.secor.io.FileWriter;
-import com.pinterest.secor.io.KeyValue;
-import com.pinterest.secor.util.CompressionUtil;
-import com.pinterest.secor.util.IdUtil;
-import com.pinterest.secor.util.ReflectionUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.compress.CompressionCodec;
@@ -31,7 +27,19 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import com.google.common.base.Joiner;
+import com.pinterest.secor.common.FileRegistry;
+import com.pinterest.secor.common.LogFilePath;
+import com.pinterest.secor.common.OffsetTracker;
+import com.pinterest.secor.common.SecorConfig;
+import com.pinterest.secor.common.TopicPartition;
+import com.pinterest.secor.common.ZookeeperConnector;
+import com.pinterest.secor.io.FileReader;
+import com.pinterest.secor.io.FileWriter;
+import com.pinterest.secor.io.KeyValue;
+import com.pinterest.secor.util.CompressionUtil;
+import com.pinterest.secor.util.IdUtil;
+import com.pinterest.secor.util.ReflectionUtil;
 
 /**
  * Uploader applies a set of policies to determine if any of the locally stored files should be
@@ -164,6 +172,10 @@ public class Uploader {
                     copiedMessages++;
                 }
             }
+        } catch(IOException e) {
+            LOG.error("Error trimming srcPath: {}", srcPath, e);
+            throw new IOException("Error trimming srcPath: " + srcPath, e);
+
         } finally {
             if (reader != null) {
                 reader.close();

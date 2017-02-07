@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import com.pinterest.secor.io.FileReader;
 import com.pinterest.secor.io.FileReaderWriterFactory;
@@ -101,7 +102,7 @@ public class FlexibleDelimitedFileReaderWriterFactory implements FileReaderWrite
             return null;
           } else { // if bytes followed by end of stream: framing error
             throw new EOFException(
-            "Non-empty message without delimiter");
+            "Non-empty message without delimiter: " + new String(messageBuffer.toByteArray(), StandardCharsets.UTF_8));
           }
         }
         messageBuffer.write(nextByte);
